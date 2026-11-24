@@ -10,6 +10,7 @@ export default defineNuxtConfig({
   ],
 
   app: {
+    baseURL: '/pacca-childcare/',
     head: {
       title: 'PACCA Adventures Group',
 
