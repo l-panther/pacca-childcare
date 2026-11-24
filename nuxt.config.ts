@@ -34,10 +34,10 @@ export default defineNuxtConfig({
       ],
 
       link: [
-        {
+        { 
           rel: 'icon',
           type: 'image/png',
-          href: '/logo.png'
+          href: '/pacca-childcare/logo.png'
         },
         {
           rel: 'apple-touch-icon',
