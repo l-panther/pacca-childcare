@@ -1,121 +1,137 @@
-<script setup>
-import { onMounted, onBeforeUnmount } from 'vue'
 
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import logo from '~/assets/images/logo/logo-toolbar.png'
+
+const activeSection = ref('home')
+
+const sections = [
+  'home',
+  'about',
+  'clubs',
+  'reviews',
+  'contact'
+]
 
 let navToggle
 let siteNav
 let navOverlay
 
-
 function openNav() {
-  siteNav.classList.add('open')
-  navToggle.classList.add('open')
-  navOverlay.classList.add('open')
+  siteNav?.classList.add('open')
+  navToggle?.classList.add('open')
+  navOverlay?.classList.add('open')
 
-  navToggle.setAttribute(
-    'aria-expanded',
-    'true'
-  )
-
+  navToggle?.setAttribute('aria-expanded', 'true')
   document.body.style.overflow = 'hidden'
 }
 
-
 function closeNav() {
-  siteNav.classList.remove('open')
-  navToggle.classList.remove('open')
-  navOverlay.classList.remove('open')
+  siteNav?.classList.remove('open')
+  navToggle?.classList.remove('open')
+  navOverlay?.classList.remove('open')
 
-  navToggle.setAttribute(
-    'aria-expanded',
-    'false'
-  )
-
+  navToggle?.setAttribute('aria-expanded', 'false')
   document.body.style.overflow = ''
 }
 
-
 function toggleNav() {
-  siteNav.classList.contains('open')
+  siteNav?.classList.contains('open')
     ? closeNav()
     : openNav()
 }
 
+function handleScroll() {
+  const headerHeight = document.querySelector('header')?.offsetHeight || 80
+  const position = window.scrollY + headerHeight + 100
+
+  // Keep Home active at the top
+  if (window.scrollY < 50) {
+    activeSection.value = 'home'
+    return
+  }
+
+  // Ensure Contact becomes active at the bottom
+  if (
+    window.innerHeight + window.scrollY >=
+    document.documentElement.scrollHeight - 10
+  ) {
+    activeSection.value = 'contact'
+    return
+  }
+
+  let current = 'home'
+
+  sections.forEach(id => {
+    const section = document.getElementById(id)
+
+    if (section && section.offsetTop <= position) {
+      current = id
+    }
+  })
+
+  activeSection.value = current
+}
 
 onMounted(() => {
-
   navToggle = document.getElementById('navToggle')
   siteNav = document.getElementById('siteNav')
   navOverlay = document.getElementById('navOverlay')
 
+  navToggle?.addEventListener('click', toggleNav)
+  navOverlay?.addEventListener('click', closeNav)
 
-  if (!navToggle || !siteNav || !navOverlay) return
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  window.addEventListener('resize', handleScroll)
 
-
-  navToggle.addEventListener(
-    'click',
-    toggleNav
-  )
-
-  navOverlay.addEventListener(
-    'click',
-    closeNav
-  )
-
-
-  siteNav
-    .querySelectorAll('a')
-    .forEach(link => {
-      link.addEventListener(
-        'click',
-        closeNav
-      )
-    })
-
+  handleScroll()
 })
-
 
 onBeforeUnmount(() => {
+  navToggle?.removeEventListener('click', toggleNav)
+  navOverlay?.removeEventListener('click', closeNav)
 
-  navToggle?.removeEventListener(
-    'click',
-    toggleNav
-  )
+  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', handleScroll)
 
-  navOverlay?.removeEventListener(
-    'click',
-    closeNav
-  )
-
+  document.body.style.overflow = ''
 })
 </script>
+
 
 <template>
 <header>
   <div class="header-inner">
-    <div class="logo"><span class="logo-mark">
-      <img :src="logo" alt="">
-    </span></div>
+    <div class="logo">
+      <span class="logo-mark">
+        <img :src="logo" alt="">
+      </span>
+    </div>
+   
     <nav id="siteNav">
       <ul>
-        <li class="active">
-          <a href="#">Home</a>
+        <li :class="{ active: activeSection === 'home' }">
+          <a href="#home" @click="closeNav">Home</a>
         </li>
-        <li>
+
+        <li :class="{ active: activeSection === 'about' }">
           <a href="#about" @click="closeNav">About Us</a>
         </li>
-        <li>
+
+        <li :class="{ active: activeSection === 'clubs' }">
           <a href="#clubs" @click="closeNav">Our Clubs</a>
         </li>
-        <li>
+
+        <li :class="{ active: activeSection === 'reviews' }">
           <a href="#reviews" @click="closeNav">Reviews</a>
         </li>
-        <li>
+
+        <li :class="{ active: activeSection === 'contact' }">
           <a href="#contact" @click="closeNav">Contact</a>
         </li>
       </ul>
     </nav>
+
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="siteNav">
       <span></span><span></span><span></span>
     </button>
