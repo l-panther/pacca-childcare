@@ -1,0 +1,25 @@
+{
+  "name": "pacca-childcare",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/image": "^2.1.0",
+    "@popperjs/core": "^2.11.8",
+    "@resvg/resvg-js": "^2.6.2",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
+    "nuxt": "^4.7.0",
+    "vue": "^3.5.41",
+    "vue-router": "^5.2.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
